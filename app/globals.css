@@ -128,3 +128,27 @@
     @apply font-sans;
   }
 }
+
+/* Neumorphism Utility Classes */
+.neu-raised {
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1), -8px -8px 16px rgba(255, 255, 255, 0.7);
+}
+.neu-pressed {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.7);
+}
+.neu-float {
+  transition: all 0.3s ease;
+}
+.neu-float:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+.dark .neu-raised {
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.2), -8px -8px 16px rgba(255, 255, 255, 0.1);
+}
+.dark .neu-pressed {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.2), inset -4px -4px 8px rgba(255, 255, 255, 0.1);
+}
+.dark .neu-float:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}

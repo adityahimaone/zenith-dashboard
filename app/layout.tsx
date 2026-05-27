@@ -27,16 +27,16 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-gray-50">
-        <header className="bg-white border-b px-6 py-4">
+      <body className="min-h-full flex flex-col bg-background">
+        <header className="neu-raised neu-float px-6 py-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+              <div className="h-8 w-8 rounded-xl flex items-center justify-center text-white font-bold text-sm bg-gradient-to-br from-indigo-500 to-blue-600">
                 Z
               </div>
-              <h1 className="text-xl font-semibold">Zenith Finance</h1>
+              <h1 className="text-xl font-semibold tracking-tight text-foreground">Zenith Finance</h1>
             </div>
-            <p className="text-sm text-gray-500">Personal Finance Dashboard</p>
+            <p className="text-sm text-muted-foreground">Personal Finance Dashboard</p>
           </div>
         </header>
         <main className="flex-1 p-6">

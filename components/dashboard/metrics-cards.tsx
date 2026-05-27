@@ -1,6 +1,5 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Transaction } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils/calculations';
 import { TrendingUp, TrendingDown, Wallet, PiggyBank } from 'lucide-react';
@@ -21,49 +20,60 @@ export default function MetricsCards({ transactions }: MetricsCardsProps) {
   const netWorth = transactions.length > 0 ? transactions[transactions.length - 1].balance : 0;
   const savingsRate = income > 0 ? ((income - expense) / income) * 100 : 0;
 
+  const metrics = [
+    {
+      title: 'Total Income',
+      value: formatCurrency(income),
+      icon: TrendingUp,
+      color: 'text-emerald-600',
+      accent: 'bg-emerald-500',
+      iconBg: 'bg-emerald-50',
+    },
+    {
+      title: 'Total Expense',
+      value: formatCurrency(expense),
+      icon: TrendingDown,
+      color: 'text-rose-600',
+      accent: 'bg-rose-500',
+      iconBg: 'bg-rose-50',
+    },
+    {
+      title: 'Net Worth',
+      value: formatCurrency(netWorth),
+      icon: Wallet,
+      color: 'text-blue-600',
+      accent: 'bg-blue-500',
+      iconBg: 'bg-blue-50',
+    },
+    {
+      title: 'Savings Rate',
+      value: `${savingsRate.toFixed(1)}%`,
+      icon: PiggyBank,
+      color: savingsRate >= 0 ? 'text-emerald-600' : 'text-rose-600',
+      accent: savingsRate >= 0 ? 'bg-emerald-500' : 'bg-rose-500',
+      iconBg: savingsRate >= 0 ? 'bg-emerald-50' : 'bg-rose-50',
+    },
+  ];
+
   return (
     <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Income</CardTitle>
-          <TrendingUp className="h-4 w-4 text-emerald-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-emerald-600">{formatCurrency(income)}</div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Expense</CardTitle>
-          <TrendingDown className="h-4 w-4 text-rose-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-rose-600">{formatCurrency(expense)}</div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Net Worth</CardTitle>
-          <Wallet className="h-4 w-4 text-blue-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{formatCurrency(netWorth)}</div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Savings Rate</CardTitle>
-          <PiggyBank className="h-4 w-4 text-violet-500" />
-        </CardHeader>
-        <CardContent>
-          <div className={`text-2xl font-bold ${savingsRate >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-            {savingsRate.toFixed(1)}%
+      {metrics.map((metric) => (
+        <div
+          key={metric.title}
+          className="neu-raised neu-float bg-card rounded-2xl p-5 flex flex-col gap-3"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-muted-foreground">{metric.title}</span>
+            <div className={`h-10 w-10 rounded-xl ${metric.iconBg} flex items-center justify-center`}>
+              <metric.icon className={`h-5 w-5 ${metric.color}`} />
+            </div>
           </div>
-        </CardContent>
-      </Card>
+          <div className="flex items-center gap-3">
+            <div className={`w-1 h-8 rounded-full ${metric.accent}`} />
+            <span className={`text-xl lg:text-2xl font-bold ${metric.color}`}>{metric.value}</span>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

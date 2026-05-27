@@ -62,8 +62,8 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Dashboard</h2>
+          <p className="text-sm text-muted-foreground">
             Last updated: {new Date(metrics.lastUpdated).toLocaleString('id-ID')}
           </p>
         </div>
@@ -73,12 +73,12 @@ export default function DashboardPage() {
         <MetricsCards transactions={transactions} />
       </Suspense>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <CategoryChart data={categoryData} />
         <MonthlyChart data={monthlyData} />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <AccountBalances transactions={transactions} />
         <RecentTransactions transactions={transactions} />
       </div>

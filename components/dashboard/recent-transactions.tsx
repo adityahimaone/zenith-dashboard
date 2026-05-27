@@ -1,7 +1,5 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Transaction } from '@/lib/types';
 import { formatCurrency, formatDate } from '@/lib/utils/calculations';
 import { useState } from 'react';
@@ -9,6 +7,12 @@ import { useState } from 'react';
 interface RecentTransactionsProps {
   transactions: Transaction[];
 }
+
+const FILTERS = [
+  { key: 'all' as const, label: 'All' },
+  { key: 'income' as const, label: 'Income' },
+  { key: 'expense' as const, label: 'Expense' },
+];
 
 export default function RecentTransactions({ transactions }: RecentTransactionsProps) {
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
@@ -21,57 +25,49 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
   const recent = filtered.slice(-10).reverse();
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Recent Transactions</CardTitle>
-          <div className="flex gap-2">
-            <Badge
-              variant={filter === 'all' ? 'default' : 'outline'}
-              className="cursor-pointer"
-              onClick={() => setFilter('all')}
+    <div className="neu-raised bg-card rounded-2xl p-5 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold tracking-tight text-foreground">Recent Transactions</h3>
+        <div className="flex gap-2">
+          {FILTERS.map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setFilter(f.key)}
+              className={
+                filter === f.key
+                  ? 'rounded-full bg-[#5266eb] text-white px-3 py-1 text-xs font-medium transition-all duration-200'
+                  : 'rounded-full bg-[#f0f0f3] text-muted-foreground px-3 py-1 text-xs font-medium transition-all duration-200 hover:bg-gray-200'
+              }
             >
-              All
-            </Badge>
-            <Badge
-              variant={filter === 'income' ? 'default' : 'outline'}
-              className="cursor-pointer bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
-              onClick={() => setFilter('income')}
-            >
-              Income
-            </Badge>
-            <Badge
-              variant={filter === 'expense' ? 'default' : 'outline'}
-              className="cursor-pointer bg-rose-100 text-rose-800 hover:bg-rose-200"
-              onClick={() => setFilter('expense')}
-            >
-              Expense
-            </Badge>
-          </div>
+              {f.label}
+            </button>
+          ))}
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4 max-h-[400px] overflow-y-auto">
-          {recent.length === 0 ? (
-            <p className="text-sm text-gray-500">No transactions found</p>
-          ) : (
-            recent.map((t, idx) => (
-              <div key={idx} className="flex items-center justify-between border-b pb-3 last:border-b-0">
-                <div className="flex-1">
-                  <p className="font-medium text-sm">{t.description}</p>
-                  <p className="text-xs text-gray-500">
-                    {formatDate(t.timestamp)} • {t.category} • {t.source}
-                  </p>
-                </div>
-                <div className={`font-semibold text-sm ${t.type === 'Income' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                  {t.type === 'Income' ? '+' : '-'}
-                  {formatCurrency(Math.abs(t.amount))}
-                </div>
+      </div>
+
+      <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+        {recent.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">No transactions found</p>
+        ) : (
+          recent.map((t, idx) => (
+            <div
+              key={idx}
+              className="flex items-center justify-between rounded-xl p-3 transition-all hover:bg-muted/50"
+            >
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm text-foreground truncate">{t.description}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {formatDate(t.timestamp)} &bull; {t.category} &bull; {t.source}
+                </p>
               </div>
-            ))
-          )}
-        </div>
-      </CardContent>
-    </Card>
+              <span className={`font-semibold text-sm shrink-0 ml-2 ${t.type === 'Income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                {t.type === 'Income' ? '+' : '-'}
+                {formatCurrency(Math.abs(t.amount))}
+              </span>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   );
 }

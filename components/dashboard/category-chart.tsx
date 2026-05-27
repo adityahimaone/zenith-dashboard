@@ -22,38 +22,45 @@ const COLORS = [
 
 export default function CategoryChart({ data }: CategoryChartProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">Expense by Category</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[300px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={2}
-                dataKey="amount"
-                nameKey="category"
-                label={({ category, percentage }) => `${category} (${percentage.toFixed(0)}%)`}
-              >
-                {data.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number) => formatCurrency(value)}
-                labelFormatter={(label) => label}
-              />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="neu-raised bg-card rounded-2xl p-5 flex flex-col gap-4">
+      <h3 className="text-lg font-semibold tracking-tight text-foreground">Expense by Category</h3>
+      <div className="h-[300px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={60}
+              outerRadius={80}
+              paddingAngle={2}
+              dataKey="amount"
+              nameKey="category"
+              label={({ category, percentage }) => `${category} (${percentage.toFixed(0)}%)`}
+            >
+              {data.map((_, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value: number) => formatCurrency(value)}
+              labelFormatter={(label) => label}
+              contentStyle={{
+                backgroundColor: 'white',
+                borderRadius: '1rem',
+                boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+                border: 'none',
+                padding: '0.75rem',
+              }}
+            />
+            <Legend
+              formatter={(value: string) => (
+                <span className="text-xs text-muted-foreground">{value}</span>
+              )}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 }
