@@ -1,19 +1,39 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 const SPREADSHEET_ID = process.env.ZENITH_SPREADSHEET_ID || '1XmIbfIZtP2XF1n9WFobC8fA0o4oKfMcfp3QM8OxONog';
-const TOKEN_PATH = join(process.env.HOME || '', '.hermes', 'google_token.json');
+const TOKEN_PATH = join(process.env.HOME || '/home/adityahimaone', '.hermes', 'google_token.json');
 
 function getAuth() {
-  const token = JSON.parse(readFileSync(TOKEN_PATH, 'utf-8'));
+  if (!existsSync(TOKEN_PATH)) {
+    throw new Error(`Token file not found at ${TOKEN_PATH}`);
+  }
+
+  const rawToken = JSON.parse(readFileSync(TOKEN_PATH, 'utf-8'));
+  
+  // Normalize: googleapis expects access_token, but Hermes saves as token
+  const token = {
+    ...rawToken,
+    access_token: rawToken.access_token || rawToken.token,
+  };
+
   const oauth2Client = new google.auth.OAuth2(
     token.client_id,
     token.client_secret,
     'urn:ietf:wg:oauth:2.0:oob'
   );
   oauth2Client.setCredentials(token);
+
+  // Auto-refresh expired tokens
+  oauth2Client.on('tokens', (tokens) => {
+    if (tokens.refresh_token || tokens.access_token) {
+      const updated = { ...rawToken, ...tokens };
+      require('fs').writeFileSync(TOKEN_PATH, JSON.stringify(updated, null, 2));
+    }
+  });
+
   return oauth2Client;
 }
 
