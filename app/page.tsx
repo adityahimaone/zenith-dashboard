@@ -7,7 +7,10 @@ import AccountBalances from '@/components/dashboard/account-balances';
 import { calculateCategoryBreakdown, calculateMonthlyData } from '@/lib/utils/calculations';
 
 async function getSheetData() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ''}/api/sheets`, {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
+                  (typeof window === 'undefined' ? 'http://localhost:3005' : '');
+  
+  const res = await fetch(`${baseUrl}/api/sheets`, {
     next: { revalidate: 60 },
   });
   
