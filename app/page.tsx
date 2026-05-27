@@ -32,13 +32,12 @@ export default function DashboardPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
-        const res = await fetch(`${baseUrl}/api/sheets`);
-        
+        const res = await fetch('/api/sheets', {
+          // next: { revalidate: 60 }, // not needed in client fetch; we can add cache control if desired
+        });
         if (!res.ok) {
           throw new Error('Failed to fetch data');
         }
-        
         const result = await res.json();
         setData(result);
       } catch (err) {
